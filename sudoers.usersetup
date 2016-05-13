@@ -1,0 +1,2 @@
+usersetup ALL=NOPASSWD: /usr/bin/restrict_useradd.sh
+usersetup ALL = (toasteruser) NOPASSWD: /usr/bin/toaster-launch.sh
