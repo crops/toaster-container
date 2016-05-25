@@ -42,6 +42,8 @@ RUN apt-get -y update && \
     echo "#include /etc/sudoers.usersetup" >> /etc/sudoers
 
 USER usersetup
-RUN  containersetup.sh /home/usersetup
+
+ARG BRANCH
+RUN containersetup.sh /home/usersetup $BRANCH
 
 ENTRYPOINT ["toaster-entry.py"]
