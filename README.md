@@ -24,7 +24,7 @@ Running the container
   to run a container for the first time would be:
 
   ```
-  docker run -it --rm -p 127.0.0.1:18000:8000 -v /home/rewitt/builds/toaster:/workdir crops/toaster
+  docker run -it --rm -p 127.0.0.1:18000:8000 -v /home/myuser/workdir:/workdir crops/toaster
   ```
   You should see output similar to the following:
   ```
