@@ -1,3 +1,7 @@
+# The language is set to python to ensure virtualenv and python exist for the
+# tests.
+language: python
+
 sudo: required
 services:
   - docker
@@ -6,8 +10,9 @@ env:
   matrix:
     # BRANCH is the actually branch/tag in the github repo
     # DOCKERHUB_TAGS are the tags to use for the REPO when pushing todockerhub
-    - BRANCH=krogoth DOCKERHUB_TAGS="latest krogoth"
-    - BRANCH=yocto-2.1 DOCKERHUB_TAGS="2.1"
+    # POKYBRANCH is the branch of poky used during testing.
+    - BRANCH=krogoth DOCKERHUB_TAGS="latest krogoth" POKYBRANCH=krogoth
+    - BRANCH=yocto-2.1 DOCKERHUB_TAGS="2.1" POKYBRANCH=krogoth
 
   global:
     - DOCKER_VERSION=1.10.1-0~trusty
@@ -25,6 +30,7 @@ script:
   # Build for the "local" repo, the deploy will handle setting the correct
   # repo name before pushing to dockerhub.
   - docker build --build-arg BRANCH="${BRANCH}" -t local .
+  - bash -c "cd tests; IMAGE=local SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
 
 after_success:
   - bash deploy.sh
