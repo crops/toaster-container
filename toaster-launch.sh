@@ -34,10 +34,6 @@ if [ ! -e "${toasterdb}" ]; then
                           set sourcedir='${workdir}',builddir='${builddir}'"
 fi
 
-
-# virtualenv activation
-. ${bootstrap}/toaster/bin/activate
-
 # oe environment setup
 . ${bootstrap}/poky/oe-init-build-env ${builddir}
 
