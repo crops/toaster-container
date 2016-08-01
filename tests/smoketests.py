@@ -96,8 +96,11 @@ try:
 
 except Exception as e:
     failed=True
+
+    traceback.print_exc()
+
     path = os.path.abspath('screenshot.png')
-    print("{}\nAttempting to save screenshot to {}".format(e, path))
+    print("\nAttempting to save screenshot to {}".format(path))
     driver.save_screenshot(path)
 
 finally:
