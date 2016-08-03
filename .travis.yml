@@ -13,6 +13,7 @@ env:
     # POKYBRANCH is the branch of poky used during testing.
     - BRANCH=krogoth DOCKERHUB_TAGS="latest krogoth" POKYBRANCH=krogoth
     - BRANCH=yocto-2.1 DOCKERHUB_TAGS="2.1" POKYBRANCH=krogoth
+    - BRANCH=master DOCKERHUB_TAGS="master" POKYBRANCH=master
 
   global:
     - DOCKER_VERSION=1.10.1-0~trusty
