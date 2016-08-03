@@ -1,4 +1,4 @@
-#!/bin/bash -i
+#!/bin/bash
 # Copyright (C) 2016 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
@@ -13,26 +13,24 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-if [ $# -ne 2 ]; then
-    echo "Usage: primetoaster.sh WORKDIR POKYDIR"
+
+# The sole purpose of this script is to only install the python3 version of
+# the requirements if necessary. Unconditionally trying to install using
+# python3 on an older toaster-requirements.txt will fail.
+set -e
+
+if [ $# -ne 1 ]; then
+    echo "Usage: pipinstall.sh BITBAKEDIR"
     exit 1
 fi
 
-WORKDIR=$1
-POKYDIR=$2
+BITBAKEDIR=$1
 
-cd $WORKDIR
 
-# Run toaster once to setup the database so when the container is first ran,
-# the user doesn't have to wait
-. $POKYDIR/oe-init-build-env build
-
-# This is kind of strange. But since older versions of toaster didn't support
-# "--help" trying to use --help to see if "stop" is supported won't work.
-# Passing "--help" on older versions starts toaster.
-. $POKYDIR/bitbake/bin/toaster start
-
-. $POKYDIR/bitbake/bin/toaster stop
-
-mv toaster.sqlite $WORKDIR || exit 1
-rm $WORKDIR/build -rf || exit 1
+if grep '#!/usr/bin/env python3' $BITBAKEDIR/bin/bitbake >& /dev/null; then
+    pip3 install --upgrade pip && \
+    pip3 install -r $BITBAKEDIR/toaster-requirements.txt
+else
+    pip install --upgrade pip && \
+    pip install -r $BITBAKEDIR/toaster-requirements.txt
+fi

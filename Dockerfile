@@ -23,15 +23,15 @@ ADD https://raw.githubusercontent.com/crops/extsdk-container/master/restrict_use
 COPY primetoaster.sh \
             toaster-launch.sh \
             toaster-entry.py \
+            pipinstall.sh \
         /usr/bin/
 COPY sudoers.usersetup /etc/
 
 # We remove the user because we add a new one of our own.
 # The usersetup user is solely for adding a new user that has the same uid,
 # as the workspace. 70 is an arbitrary *low* unused uid on debian.
-ARG BRANCH
 RUN apt-get -y update && \
-    apt-get -y install sudo sqlite && \
+    apt-get -y install python-pip python3-pip sudo sqlite && \
     apt-get clean && \
     userdel -r yoctouser && \
     useradd -U -m -u 70 usersetup && \
@@ -39,15 +39,17 @@ RUN apt-get -y update && \
         /usr/bin/usersetup.py \
         /usr/bin/toaster-launch.sh \
         /usr/bin/toaster-entry.py \
+        /usr/bin/pipinstall.sh \
         /usr/bin/restrict_useradd.sh && \
-    echo "#include /etc/sudoers.usersetup" >> /etc/sudoers && \
-    # Install the toaster requirements 
-    git clone git://git.yoctoproject.org/poky --depth=1 --branch=$BRANCH /home/usersetup/poky && \
-    pip install --upgrade pip && \
-    pip install -r /home/usersetup/poky/bitbake/toaster-requirements.txt
+    echo "#include /etc/sudoers.usersetup" >> /etc/sudoers
+
+# Install the toaster requirements.
+ARG BRANCH
+RUN git clone git://git.yoctoproject.org/poky --depth=1 --branch=$BRANCH /home/usersetup/poky && \
+    pipinstall.sh /home/usersetup/poky/bitbake
 
 USER usersetup
-
+ENV LANG=en_US.UTF-8
 RUN primetoaster.sh /home/usersetup /home/usersetup/poky
 
 ENTRYPOINT ["toaster-entry.py"]

@@ -19,6 +19,7 @@
 import argparse
 import os
 import sys
+import traceback
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -84,11 +85,50 @@ try:
     element = driver.find_element_by_id("build-button")
     element.click()
 
-    # Wait for either a success or a fail
-    selector = ("div.alert.build-result.alert-success,"
-                "div.alert.build-result.alert-error")
-    ec = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
-    element = WebDriverWait(driver, 120).until(ec)
+    # ######################START OF WORKAROUND#########################
+    # This loop not using WebDriverWait is for the sole purpose of
+    # working around the fact that the build results don't automatically
+    # refresh on master. It's a known problem and currently being worked on.
+    # This code can and should be changed back to the total timeout being
+    # passed to WebDriverWait() after the bug goes away.
+    if args.pokybranch == "master":
+        from selenium.common.exceptions import NoSuchElementException
+        from selenium.common.exceptions import TimeoutException
+        import time
+        # Wait for the new project page to actually appear
+        ec = EC.presence_of_element_located((By.ID, "latest-builds"))
+        WebDriverWait(driver, 30).until(ec)
+
+        totaltime = 0
+        while totaltime < 120:
+            elementfound=True
+            driver.refresh()
+
+            # Wait for either a success or a fail
+            selector = ("div.alert.build-result.alert-success,"
+                        "div.alert.build-result.alert-error")
+            try:
+                element = driver.find_element_by_css_selector(selector)
+            except NoSuchElementException:
+                elementfound=False
+                pass
+
+            if elementfound:
+                break
+            else:
+                time.sleep(5)
+                totaltime += 5
+
+        if totaltime == 120:
+            raise TimeoutException()
+
+    # ######################END OF WORKAROUND#########################
+    else:
+        # Wait for either a success or a fail
+        selector = ("div.alert.build-result.alert-success,"
+                    "div.alert.build-result.alert-error")
+        ec = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+        element = WebDriverWait(driver, 120).until(ec)
 
     # If the build failed bail out
     if "alert-error" in element.get_attribute("class"):
