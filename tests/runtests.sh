@@ -79,6 +79,11 @@ function fail () {
              cat $seleniumlog
          fi
 	 printf "******************selenium.log******************\n\n"
+
+         printf "******************screenshot.hex******************\n"
+         printf "*************Run 'xxd -r' to reverse**************\n"
+         xxd screenshot.png
+         printf "******************screenshot.hex******************\n\n"
     fi
 
     exit 1
