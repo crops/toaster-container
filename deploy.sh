@@ -28,6 +28,15 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
 
     docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     docker push ${REPO}
+
+    # If this is the LATEST_RELEASE_REPO we also need to push to the
+    # FLOATING_REPO
+    if [ "${LATEST_RELEASE_REPO}" = "${REPO}" ]; then
+        for tag in ${DOCKERHUB_TAGS}; do
+	    docker tag local ${FLOATING_REPO}:${tag}
+        done
+        docker push ${FLOATING_REPO}
+    fi
 else
     echo "Not pushing since build was triggered by a pull request."
 fi
