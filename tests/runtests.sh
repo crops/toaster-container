@@ -51,6 +51,8 @@ function stop_containers () {
 
 trap fail SIGINT SIGTERM ERR
 function fail () {
+    set +e
+
     kill $(jobs -p)
     stop_containers
 
