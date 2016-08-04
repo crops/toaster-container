@@ -31,7 +31,7 @@ script:
   # Build for the "local" repo, the deploy will handle setting the correct
   # repo name before pushing to dockerhub.
   - docker build --build-arg BRANCH="${BRANCH}" -t local .
-  - bash -c "cd tests; IMAGE=local SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
+  - bash -c "cd tests; SELENIUM_TIMEOUT=1800 IMAGE=local SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
 
 after_success:
   - bash deploy.sh
