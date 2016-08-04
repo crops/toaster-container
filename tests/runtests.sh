@@ -68,6 +68,12 @@ function fail () {
          fi
          printf "******************toaster.log*******************\n\n"
 
+         printf "******************toaster_ui.log*******************\n"
+         if [ "" != "$toaster_ui_log" ]; then
+             cat $toaster_ui_log
+         fi
+         printf "******************toaster_ui.log*******************\n\n"
+
 	 printf "******************selenium.log******************\n"
          if [ "" != "$seleniumlog" ]; then
              cat $seleniumlog
@@ -147,6 +153,7 @@ seleniumname=seleniumserver-$id
 
 toasterlog=$tempdir/toaster.log
 seleniumlog=$tempdir/selenium.log
+toaster_ui_log=$tempdir/toasterbuild/build-toaster-2/toaster_ui.log
 
 if [ "" != "$IMAGE" ]; then
     image="$IMAGE"
