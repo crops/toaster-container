@@ -35,6 +35,8 @@ parser.add_argument("--pokybranch", default="master",
                     help="poky branch to use for build")
 parser.add_argument("--target", default="quilt-native",
                     help="target that toaster should build")
+parser.add_argument("--timeout", type=int, default="120",
+                    help="timeout in seconds to wait for page elements")
 
 args = parser.parse_args()
 driver = webdriver.Remote(args.server_url,
@@ -51,7 +53,7 @@ try:
 
     # Wait for the new project page to actually appear
     ec = EC.presence_of_element_located((By.ID, "new-project-name"))
-    WebDriverWait(driver, 30).until(ec)
+    WebDriverWait(driver, args.timeout).until(ec)
 
     # Type the project name
     element = driver.find_element_by_id("new-project-name")
@@ -97,10 +99,10 @@ try:
         import time
         # Wait for the new project page to actually appear
         ec = EC.presence_of_element_located((By.ID, "latest-builds"))
-        WebDriverWait(driver, 30).until(ec)
+        WebDriverWait(driver, args.timeout).until(ec)
 
         totaltime = 0
-        while totaltime < 120:
+        while totaltime < args.timeout:
             elementfound=True
             driver.refresh()
 
@@ -119,7 +121,7 @@ try:
                 time.sleep(5)
                 totaltime += 5
 
-        if totaltime == 120:
+        if totaltime == args.timeout:
             raise TimeoutException()
 
     # ######################END OF WORKAROUND#########################
@@ -128,7 +130,7 @@ try:
         selector = ("div.alert.build-result.alert-success,"
                     "div.alert.build-result.alert-error")
         ec = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
-        element = WebDriverWait(driver, 120).until(ec)
+        element = WebDriverWait(driver, args.timeout).until(ec)
 
     # If the build failed bail out
     if "alert-error" in element.get_attribute("class"):

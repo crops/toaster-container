@@ -42,6 +42,10 @@
 # SHOW_LOGS_ON_FAILURE
 #    When set, if the tests fail, the contents of toaster.log and selenium.log
 #    will be output to the terminal. This is useful for when running on travis.
+#
+# SELENIUM_TIMEOUT
+#    The amount of time to wait for elements in selenium. The default will
+#    be the default for the --timeout argument to smoketests, which is 120.
 
 set -e
 
@@ -160,6 +164,10 @@ if [ "" != "$POKYBRANCH" ]; then
     pokybranch_arg="--pokybranch=$POKYBRANCH"
 fi
 
+if [ "" != "$SELENIUM_TIMEOUT" ]; then
+    timeout_arg="--timeout=$SELENIUM_TIMEOUT"
+fi
+
 
 # Create a virtualenv that contains the modules needed by smoketests.py
 virtualenv $tempdir/selenium
@@ -174,6 +182,7 @@ start_selenium
 
 printf "\n\nRunning tests...\n"
 ./smoketests.py --toaster_url="$toastername:8000" \
+                $timeout_arg \
                 $pokybranch_arg
 ./checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
 echo "TESTS PASSED!"
