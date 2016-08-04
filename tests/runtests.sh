@@ -59,11 +59,15 @@ function fail () {
     echo "FAILURE: See logs in $tempdir"
     if [ "" != "$SHOW_LOGS_ON_FAILURE" ]; then
          printf "******************toaster.log*******************"
-	 cat $toasterlog
+         if [ "" != "$toasterlog" ]; then
+             cat $toasterlog
+         fi
          printf "******************toaster.log*******************\n\n"
 
 	 printf "******************selenium.log******************"
-	 cat $seleniumlog
+         if [ "" != "$seleniumlog" ]; then
+             cat $seleniumlog
+         fi
 	 printf "******************selenium.log******************\n\n"
     fi
 
