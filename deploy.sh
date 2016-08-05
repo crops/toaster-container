@@ -18,6 +18,11 @@
 # a loop in travis.yml isn't a great thing.
 set -e
 
+function getrev {
+    docker run -it --rm=true --entrypoint=git -w /home/usersetup/poky \
+        local:latest --no-pager log --pretty=%h -1 | tr -d '\r'
+}
+
 # Don't deploy on pull requests because it could just be junk code that won't
 # get merged
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
@@ -33,6 +38,11 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
 
     for repo in $REPOS; do
         docker tag local $repo:${DOCKERHUB_TAG}
+
+        # Also add a timestamp tag with the committish so that we know when it
+        # was built and what it contains
+        docker tag local $repo:${DOCKERHUB_TAG}-$(date -u +%Y%m%d%H%M)-$(getrev)
+
         docker push $repo
     done
 
