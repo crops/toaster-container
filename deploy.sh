@@ -37,6 +37,10 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
         done
         docker push ${FLOATING_REPO}
     fi
+
+    # Show the images so we know what should have been pushed
+    docker images
+
 else
     echo "Not pushing since build was triggered by a pull request."
 fi
