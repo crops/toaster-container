@@ -22,9 +22,7 @@ set -e
 # get merged
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
 
-    for tag in ${DOCKERHUB_TAGS}; do
-	docker tag local ${REPO}:${tag}
-    done
+    docker tag local ${REPO}:${DOCKERHUB_TAG}
 
     docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     docker push ${REPO}
@@ -32,9 +30,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
     # If this is the LATEST_RELEASE_REPO we also need to push to the
     # FLOATING_REPO
     if [ "${LATEST_RELEASE_REPO}" = "${REPO}" ]; then
-        for tag in ${DOCKERHUB_TAGS}; do
-	    docker tag local ${FLOATING_REPO}:${tag}
-        done
+	docker tag local ${FLOATING_REPO}:${tag}
         docker push ${FLOATING_REPO}
     fi
 
