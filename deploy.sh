@@ -21,18 +21,20 @@ set -e
 # Don't deploy on pull requests because it could just be junk code that won't
 # get merged
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-
-    docker tag local ${REPO}:${DOCKERHUB_TAG}
-
-    docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker push ${REPO}
+    REPOS="${REPO}"
 
     # If this is the LATEST_RELEASE_REPO we also need to push to the
     # FLOATING_REPO
     if [ "${LATEST_RELEASE_REPO}" = "${REPO}" ]; then
-	docker tag local ${FLOATING_REPO}:${tag}
-        docker push ${FLOATING_REPO}
+        REPOS="${REPOS} ${FLOATING_REPO}"
     fi
+
+    docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+    for repo in $REPOS; do
+        docker tag local $repo:${DOCKERHUB_TAG}
+        docker push $repo
+    done
 
     # Show the images so we know what should have been pushed
     docker images
