@@ -45,7 +45,8 @@ RUN apt-get -y update && \
 
 # Install the toaster requirements.
 ARG BRANCH
-RUN git clone git://git.yoctoproject.org/poky --depth=1 --branch=$BRANCH /home/usersetup/poky && \
+ARG GITREPO
+RUN git clone $GITREPO --depth=1 --branch=$BRANCH /home/usersetup/poky && \
     pipinstall.sh /home/usersetup/poky/bitbake
 
 USER usersetup
