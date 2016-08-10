@@ -22,7 +22,7 @@ env:
     #               match the new release
     # LATEST_TOASTER_REPO is the dockerhub repo that FLOATING_REPO should
     #                     match
-    - DOCKER_VERSION=1.10.1-0~trusty
+    - DOCKER_VERSION=1.12.0-0~trusty
     - FLOATING_REPO=crops/toaster
     - GITREPO=http://git.yoctoproject.org/git/poky
     - secure: "QqofPTaefkNFAajB8c/OQWVhKzfG95Xz5dbYR9Z6AAEfElcvs4egKM7Nt6yvYpNN2tizcq1S9Lp4qrM2lCpdRe+hpx8J8DqsqH+QGJY2OWMmMQ464IJ0ot2Cw1R+CT79SVxZMK4ZlXACgYoma4T62bwXVrHxh4E3HXpsjh0w4kXJotTeEuOwL6gHltNxPOSg4xV4CGRMdCTkQGh8g9jcf9jzGmbygv98ELyz8zTrc0QBSW8Rmk2uPo1qgIRtNKEr7QYecpUVGVFZoVJr35j3gr7dSG0JplBOQIN+dHhimmCEnOmzBfNz5MDDGtUoCnExNh/5qa8ndBnU4eWb4ku7QtoOVwfxvPwsQc9qCJYnaVBPpw3ixnXhb1ABXkavC/jjFH/d1QT8rwHImBHPUGaufFYlvHpvR8kfR6rbuvI05WZkw/ijjH6FYCv/HuYyIRFEt8sM5evu9W+cUOhtCDqdxCzDTcosEZg58b3cW4rrTc8o4KBw9fUPylr+hsNy38N5h0zihEzeK7R6FjkmbSchBBUJqkTrXa1nXWEkPN5T6m0WUJJKEk2TsMlisB+vL7n0o6jqjC5dtGxvFKDBIYT9Fet7XEDr+Wh46jWUSV7fljS09Q4/lfo/8HyfkmOzHOx8UnH3E/jaXd9p9h05QUAUOrFEJCfTXKyrtMxJgmkFyzI="
