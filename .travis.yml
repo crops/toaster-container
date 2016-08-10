@@ -33,12 +33,14 @@ before_install:
   # upgrade docker-engine to specific version, mostly to make sure the
   # build-arg argument exists
   - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine=${DOCKER_VERSION}
+  # For annotate-output
+  - sudo apt-get install -y devscripts
 
 script:
   # Build for the "local" repo, the deploy will handle setting the correct
   # repo name before pushing to dockerhub.
-  - docker build --build-arg GITREPO="${GITREPO}" --build-arg BRANCH="${BRANCH}" -t local .
-  - bash -c "cd tests; SELENIUM_TIMEOUT=1800 IMAGE=local SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
+  - annotate-output docker build --build-arg GITREPO="${GITREPO}" --build-arg BRANCH="${BRANCH}" -t local .
+  - annotate-output bash -c "cd tests; SELENIUM_TIMEOUT=1800 IMAGE=local SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
 
 after_success:
   - bash deploy.sh
