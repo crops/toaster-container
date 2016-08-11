@@ -5,10 +5,14 @@ the Yocto Project.
 
 Running the container
 ---------------------
-* **Determine the workdir**
+* **Create the workdir**
 
   The workdir you create will be used for all output from toaster. This means
-  both configuration *and* output.
+  both configuration *and* output. For example a user could create a directory using the command
+  
+  ```
+  mkdir -p /home/myuser/workdir
+  ```
 
   *It is important that you are the owner of the directory.* The owner of the
   directory is what determines the user id used inside the container. If you
@@ -64,9 +68,9 @@ Running the container
     inside the container.
 
   * **_-p 127.0.0.1:18000:8000_**:   
-    * *127.0.01* is the ip address on which the webserver will listen. This
+    * *127.0.0.1* is the ip address you will use to connect to toaster. This
       can be changed.
-    * *18000* is the port on which the webserver will listen. This
+    * *18000* is the port you will use to connect to toaster. This
       can be changed.
     * *8000*: is the port that is being mapped to 18000 on your local
     machine. **Do not change this value or you will not be able to access
