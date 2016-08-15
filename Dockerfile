@@ -18,6 +18,7 @@ FROM crops/yocto:ubuntu-14.04-base
 USER root
 
 ADD https://raw.githubusercontent.com/crops/extsdk-container/master/restrict_useradd.sh  \
+        https://raw.githubusercontent.com/crops/extsdk-container/master/restrict_groupadd.sh \
         https://raw.githubusercontent.com/crops/extsdk-container/master/usersetup.py \
         /usr/bin/
 COPY primetoaster.sh \
@@ -34,12 +35,14 @@ RUN apt-get -y update && \
     apt-get -y install python-pip python3-pip sudo sqlite && \
     apt-get clean && \
     userdel -r yoctouser && \
-    useradd -U -m -u 70 usersetup && \
+    groupadd -g 70 usersetup && \
+    useradd -N -m -u 70 -g 70 usersetup && \
     chmod 755 /usr/bin/primetoaster.sh \
         /usr/bin/usersetup.py \
         /usr/bin/toaster-launch.sh \
         /usr/bin/toaster-entry.py \
         /usr/bin/pipinstall.sh \
+        /usr/bin/restrict_groupadd.sh \
         /usr/bin/restrict_useradd.sh && \
     echo "#include /etc/sudoers.usersetup" >> /etc/sudoers
 
