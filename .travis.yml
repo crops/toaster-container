@@ -20,10 +20,11 @@ env:
     # FLOATING_REPO is the dockerhub repo the can change what it's tracking
     #               currently it's krogoth, but on the next release it will
     #               match the new release
-    # LATEST_TOASTER_REPO is the dockerhub repo that FLOATING_REPO should
+    # LATEST_RELEASE_REPO is the dockerhub repo that FLOATING_REPO should
     #                     match
     - DOCKER_VERSION=1.12.0-0~trusty
     - FLOATING_REPO=crops/toaster
+    - LATEST_RELEASE_REPO=crops/toaster-krogoth
     - GITREPO=http://git.yoctoproject.org/git/poky
     - secure: "QqofPTaefkNFAajB8c/OQWVhKzfG95Xz5dbYR9Z6AAEfElcvs4egKM7Nt6yvYpNN2tizcq1S9Lp4qrM2lCpdRe+hpx8J8DqsqH+QGJY2OWMmMQ464IJ0ot2Cw1R+CT79SVxZMK4ZlXACgYoma4T62bwXVrHxh4E3HXpsjh0w4kXJotTeEuOwL6gHltNxPOSg4xV4CGRMdCTkQGh8g9jcf9jzGmbygv98ELyz8zTrc0QBSW8Rmk2uPo1qgIRtNKEr7QYecpUVGVFZoVJr35j3gr7dSG0JplBOQIN+dHhimmCEnOmzBfNz5MDDGtUoCnExNh/5qa8ndBnU4eWb4ku7QtoOVwfxvPwsQc9qCJYnaVBPpw3ixnXhb1ABXkavC/jjFH/d1QT8rwHImBHPUGaufFYlvHpvR8kfR6rbuvI05WZkw/ijjH6FYCv/HuYyIRFEt8sM5evu9W+cUOhtCDqdxCzDTcosEZg58b3cW4rrTc8o4KBw9fUPylr+hsNy38N5h0zihEzeK7R6FjkmbSchBBUJqkTrXa1nXWEkPN5T6m0WUJJKEk2TsMlisB+vL7n0o6jqjC5dtGxvFKDBIYT9Fet7XEDr+Wh46jWUSV7fljS09Q4/lfo/8HyfkmOzHOx8UnH3E/jaXd9p9h05QUAUOrFEJCfTXKyrtMxJgmkFyzI="
     - secure: "cFdXG0oNirhFd4DIE3ZUZ4rn0HfQGqgudOuuDySBuhU+Is6WRCOnTYqrVqrdNl5RpwYf3XHAN5Zbme56fqdlbMlkAJMmCkOwgjTQuaDqbN3awKh3/kEfEoccYxc1yskRJJ/8IlzqlpPWRyCchl/lmkHkmySvUd0XZL4PGv0ckeDCqTC4F6vZp2ddStXFYG8D5qL8vhoArilAx+0SDHEpjNOSfP/zpfTKb8Uf0+/a4LwDF9ue/kJdq8+3CF3fKLk9LCwvwi7rYpJROAFWArJ8Jiit//kUrsqgEGOeS0R0euP6FCv8/WZjVzNMhCugt/wH08Hi1ZNq/dJc8YnAHupeQKDHSZsHax/6d0u37Lfk9r+9IXM2Kd1JWRZ9RgU8GQglkQG5FNs99EspvvWJ19P0wfP/wse4DTLflXWHV5Ap4ddjGXX70j41AvEIogq6N8ECGYzOWfbS9GU42BizXl1/5FeKmwJMCbSmHp5jKaj4mhx6BJme6d2GmdGNRxqLYn3GHZgxE9NdZrYQTjE52GGqCgowpqgx8p6FRXaGpo5NfR0pP/TgmqW0WluqMlSyUBthlEBMdP3y/2IagHN8tB9xb04Zc2p1J7FQ32p4FhHeVoH5kaXkIUiMU51C0/qL9vXhbYdmg2pRX/tqL6ivKNgluxIjh2UUXDXRaIQBMvNCMSk="
