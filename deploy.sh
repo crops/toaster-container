@@ -16,6 +16,7 @@
 #
 # This script is meant to be consumed by travis. It's very simple but running
 # a loop in travis.yml isn't a great thing.
+set -x
 set -e
 
 function getrev {
