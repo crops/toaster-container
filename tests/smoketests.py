@@ -89,14 +89,17 @@ try:
 
 
     # Wait for either a success or a fail
+    # note: bootstrap2 (krogoth) calls it alert-error
+    #       bootstrap3 (2.2 forwards) calls it alert-danger
     selector = ("div.alert.build-result.alert-success,"
+                "div.alert.build-result.alert-danger"
                 "div.alert.build-result.alert-error")
 
     ec = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
     element = WebDriverWait(driver, args.timeout).until(ec)
 
     # If the build failed bail out
-    if "alert-error" in element.get_attribute("class"):
+    if ("alert-danger" or "alert-error") in element.get_attribute("class"):
         raise Exception("ERROR: Build of {} failed.".format(args.target))
 
 except Exception as e:
