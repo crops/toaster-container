@@ -46,6 +46,11 @@
 # SELENIUM_TIMEOUT
 #    The amount of time to wait for elements in selenium. The default will
 #    be the default for the --timeout argument to smoketests, which is 120.
+#
+# POKYDIR
+#    If this is set, the dir is used as the poky and the toaster container
+#    is run in --local mode.  This is intended to allow you to run the test
+#    on the local checkout of poky you are working on.
 
 set -e
 
@@ -103,7 +108,8 @@ function start_toaster() {
     printf "\n\nStarting toaster...\n"
     docker run -t --rm=true --name=$toastername \
                -v $tempdir/toasterbuild:/workdir \
-               $image >> $toasterlog 2>&1 &
+               ${poky_bind} \
+               ${image} ${local_arg} >> $toasterlog 2>&1 &
     toasterpid=$!
 
     while ! grep "$sentinel" $toasterlog >& /dev/null; do
@@ -149,16 +155,11 @@ function start_selenium() {
     done
 }
 
-tempdir=$(mktemp -d --suffix toastertest --tmpdir)
-echo "Logs in $tempdir"
 
 id=$(uuidgen)
 toastername=toasterserver-$id
 seleniumname=seleniumserver-$id
 
-toasterlog=$tempdir/toaster.log
-seleniumlog=$tempdir/selenium.log
-toaster_ui_log=$tempdir/toasterbuild/build-toaster-2/toaster_ui.log
 
 if [ "" != "$IMAGE" ]; then
     image="$IMAGE"
@@ -179,6 +180,17 @@ fi
 if [ "" != "$SELENIUM_TIMEOUT" ]; then
     timeout_arg="--timeout=$SELENIUM_TIMEOUT"
 fi
+
+if [ "" != "$POKYDIR" ]; then
+    local_arg="--local"
+    poky_bind="-v $POKYDIR:/workdir/poky"
+fi
+
+tempdir=$(mktemp -d --suffix toastertest --tmpdir)
+echo "Logs in $tempdir"
+toasterlog=$tempdir/toaster.log
+seleniumlog=$tempdir/selenium.log
+toaster_ui_log=$tempdir/toasterbuild/build-toaster-2/toaster_ui.log
 
 
 # Create a virtualenv that contains the modules needed by smoketests.py
@@ -207,12 +219,21 @@ ${SCRIPT_DIR}/smoketests.py --toaster_url="$toastername:8000" \
                 $timeout_arg \
                 $pokybranch_arg
 echo "smoketests PASSED!"
+
 ${SCRIPT_DIR}/checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
 echo "checkartifacts PASSED!"
 
-grep -q "No migrations to apply" $toasterlog
-echo "no migration PASSED"
+if [ "" == "$POKYDIR" ]; then
+    # these tests only make sense if we are running the primed poky not a
+    # local one
+    grep -q "No migrations to apply" $toasterlog
+    echo "no migration priming PASSED"
 
+    if grep -q "INFO Fetching layers" $toasterlog; then
+	fail
+    fi
+    echo "layerindex priming PASSED"
+fi
 echo "ALL TESTS PASSED!"
 
 stop_containers
