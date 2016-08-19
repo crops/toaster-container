@@ -193,10 +193,20 @@ start_selenium
 
 
 printf "\n\nRunning tests...\n"
-./smoketests.py --toaster_url="$toastername:8000" \
+if [ -n "$BASH_SOURCE" ]; then
+    THIS_SCRIPT=$BASH_SOURCE
+elif [ -n "$ZSH_NAME" ]; then
+    THIS_SCRIPT=$0
+else
+    THIS_SCRIPT="$(pwd)/runtests.sh"
+fi
+SCRIPT_DIR=$(dirname "$THIS_SCRIPT")
+SCRIPT_DIR=$(readlink -f "$SCRIPT_DIR")
+
+${SCRIPT_DIR}/smoketests.py --toaster_url="$toastername:8000" \
                 $timeout_arg \
                 $pokybranch_arg
-./checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
+${SCRIPT_DIR}/checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
 echo "TESTS PASSED!"
 
 
