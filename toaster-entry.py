@@ -27,10 +27,19 @@ parser = argparse.ArgumentParser(epilog="NOTE: The --workdir is the path as "
 
 parser.add_argument("--workdir", default='/workdir',
                     help="Directory to use for the toasterbuild")
+parser.add_argument("--local", action="store_true",
+                    help="Run Toaster from the poky in the workdir instead of "
+                         "the default one in the container. This option is "
+                         "intended for developers of Toaster itself and is "
+                         "not supported for end users.")
 
 args = parser.parse_args()
 
 cmd = ("usersetup.py --username=toasteruser --workdir={} "
        "toaster-launch.sh {}")
 cmd = cmd.format(args.workdir, args.workdir).split()
+
+if args.local:
+    cmd.append("LOCAL")
+
 os.execvp(cmd[0], cmd)

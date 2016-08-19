@@ -14,6 +14,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 workdir="${1}"
+uselocal="${2}"
 
 # If it doesn't already exist copy the toaster database from the container
 # so that it doesn't have to be created again
@@ -21,8 +22,20 @@ bootstrap="/home/usersetup"
 builddir="${workdir}/build"
 toasterdb="${builddir}/toaster.sqlite"
 
+if  [ "${uselocal}" = "LOCAL" ]; then
+    if [ ! -e ${workdir}/poky ]; then
+        echo -e "The LOCAL mode assumes that there is a usable poky in the " \
+                "workdir you passed in.\n" \
+                "Current container view of workdir is ${workdir}"
+        exit 1
+    fi
+    # in local mode we reset bootstrap to be workdir and just run what's there
+    bootstrap=${workdir}
+fi
+
 mkdir -p ${builddir}
-if [ ! -e "${toasterdb}" ]; then
+# don't copy over the database if it's already there or if we are in local mode
+if [ ! -e "${toasterdb}" ] && [ "${uselocal}" != "LOCAL" ] ; then
     cp ${bootstrap}/toaster.sqlite ${toasterdb}
 
     # Replace /home/usersetup with the new workdir
