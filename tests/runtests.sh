@@ -209,6 +209,10 @@ ${SCRIPT_DIR}/smoketests.py --toaster_url="$toastername:8000" \
 echo "smoketests PASSED!"
 ${SCRIPT_DIR}/checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
 echo "checkartifacts PASSED!"
+
+grep -q "No migrations to apply" $toasterlog
+echo "no migration PASSED"
+
 echo "ALL TESTS PASSED!"
 
 stop_containers
