@@ -206,9 +206,10 @@ SCRIPT_DIR=$(readlink -f "$SCRIPT_DIR")
 ${SCRIPT_DIR}/smoketests.py --toaster_url="$toastername:8000" \
                 $timeout_arg \
                 $pokybranch_arg
+echo "smoketests PASSED!"
 ${SCRIPT_DIR}/checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
-echo "TESTS PASSED!"
-
+echo "checkartifacts PASSED!"
+echo "ALL TESTS PASSED!"
 
 stop_containers
 rm $tempdir -rf
