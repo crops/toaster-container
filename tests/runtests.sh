@@ -46,6 +46,11 @@
 # SELENIUM_TIMEOUT
 #    The amount of time to wait for elements in selenium. The default will
 #    be the default for the --timeout argument to smoketests, which is 120.
+#
+# LOCALDIR
+#    If this is set, the dir is used as a workdir, poky is assumed to be there,
+#    and the toaster container is run in --local mode.  This is intended to allow
+#    you to run the test on the local checkout of poky you are working on.
 
 set -e
 
@@ -90,7 +95,7 @@ function fail () {
 }
 
 function start_toaster() {
-    mkdir $tempdir/toasterbuild
+    mkdir -p $tempdir/$toasterbuild
 
     touch $toasterlog
     sentinel="Successful start."
@@ -102,8 +107,8 @@ function start_toaster() {
 
     printf "\n\nStarting toaster...\n"
     docker run -t --rm=true --name=$toastername \
-               -v $tempdir/toasterbuild:/workdir \
-               $image >> $toasterlog 2>&1 &
+               -v $tempdir/$toasterbuild:/workdir \
+               ${image} ${local_arg} >> $toasterlog 2>&1 &
     toasterpid=$!
 
     while ! grep "$sentinel" $toasterlog >& /dev/null; do
@@ -149,7 +154,17 @@ function start_selenium() {
     done
 }
 
-tempdir=$(mktemp -d --suffix toastertest --tmpdir)
+if [ "" != "$LOCALDIR" ]; then
+    tempdir="$LOCALDIR"
+    # if we are running locally, we want everything in
+    # our workdir.
+    toasterbuild=""
+    local_arg="--local"
+else
+    tempdir=$(mktemp -d --suffix toastertest --tmpdir)
+    toasterbuild="toasterbuild"
+    local_arg=""
+fi
 echo "Logs in $tempdir"
 
 id=$(uuidgen)
@@ -158,7 +173,7 @@ seleniumname=seleniumserver-$id
 
 toasterlog=$tempdir/toaster.log
 seleniumlog=$tempdir/selenium.log
-toaster_ui_log=$tempdir/toasterbuild/build-toaster-2/toaster_ui.log
+toaster_ui_log=$tempdir/$toasterbuild/build-toaster-2/toaster_ui.log
 
 if [ "" != "$IMAGE" ]; then
     image="$IMAGE"
@@ -193,12 +208,38 @@ start_selenium
 
 
 printf "\n\nRunning tests...\n"
-./smoketests.py --toaster_url="$toastername:8000" \
+if [ -n "$BASH_SOURCE" ]; then
+    THIS_SCRIPT=$BASH_SOURCE
+elif [ -n "$ZSH_NAME" ]; then
+    THIS_SCRIPT=$0
+else
+    THIS_SCRIPT="$(pwd)/runtests.sh"
+fi
+SCRIPT_DIR=$(dirname "$THIS_SCRIPT")
+SCRIPT_DIR=$(readlink -f "$SCRIPT_DIR")
+
+${SCRIPT_DIR}/smoketests.py --toaster_url="$toastername:8000" \
                 $timeout_arg \
                 $pokybranch_arg
-./checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
-echo "TESTS PASSED!"
+echo "smoketests PASSED!"
 
+${SCRIPT_DIR}/checkartifacts.sh $tempdir/$toasterbuild/build-toaster-2
+echo "checkartifacts PASSED!"
+
+grep -q "No migrations to apply" $toasterlog || test "" != $LOCALDIR
+echo "no migration priming PASSED"
+
+if grep -q "INFO Fetching layers" $toasterlog; then
+    if [ "" == $LOCALDIR ]; then
+	exit 1
+    fi
+fi
+echo "layerindex priming PASSED"
+echo "ALL TESTS PASSED!"
 
 stop_containers
-rm $tempdir -rf
+if [ "" == "$LOCALDIR" ]; then
+    # tempdir is our workdir, so do NOT
+    # rm it if we are running locally
+    rm $tempdir -rf
+fi
