@@ -6,30 +6,48 @@ the Yocto Project.
 Running the container
 ---------------------
 * **Create the workdir**
+  * **Linux**
 
-  The workdir you create will be used for all output from toaster. This means
-  both configuration *and* output. For example a user could create a directory using the command
+    The workdir you create will be used for all output from toaster. This means
+    both configuration *and* output. For example a user could create a directory using the command
   
-  ```
-  mkdir -p /home/myuser/workdir
-  ```
+    ```
+    mkdir -p /home/myuser/workdir
+    ```
 
-  *It is important that you are the owner of the directory.* The owner of the
-  directory is what determines the user id used inside the container. If you
-  are not the owner of the directory, you may not have access to the files the
-  container creates.
+    *It is important that you are the owner of the directory.* The owner of the
+    directory is what determines the user id used inside the container. If you
+    are not the owner of the directory, you may not have access to the files the
+    container creates.
 
-  For the rest of the instructions we'll assume the workdir chosen was
-  `/home/myuser/workdir`.
+    For the rest of the Linux instructions we'll assume the workdir chosen was
+    `/home/myuser/workdir`.
+    
+  * **Windows/Mac**
 
-* **The docker command**
+    If you followed the instructions for Windows or Mac at https://github.com/crops/docker-win-mac-docs/wiki, then a workdir isn't needed. Instead the volume created called *myvolume* will be used.
 
-  Assuming you used the *workdir* from above, the command
-  to run a container for the first time would be:
+* **Starting Toaster**
+  * **Linux**
 
-  ```
-  docker run -it --rm -p 127.0.0.1:18000:8000 -v /home/myuser/workdir:/workdir crops/toaster
-  ```
+    Assuming you used the *workdir* from above, the command
+    to run a container for the first time would be:
+
+    ```
+    docker run -it --rm -p 127.0.0.1:18000:8000 -v /home/myuser/workdir:/workdir crops/toaster
+    ```
+  * **Mac**
+
+    ```
+    docker run -it --rm -p 127.0.0.1:18000:8000 -v myvolume:/workdir crops/toaster
+    ```
+
+  * **Windows**
+
+    ```
+    docker run -it --rm -p 0.0.0.0:18000:8000 -v myvolume:/workdir crops/toaster
+    ```
+
   You should see output similar to the following:
   ```
   ### Shell environment set up for builds. ###
@@ -61,37 +79,20 @@ Running the container
   Successful start.
   toasteruser@da4419478a3e:/workdir/build$
   ```
-  Let's discuss some of the options:
-  * **_-v /home/myuser/workdir:/workdir_**   
-    The default location of the workdir inside of the container is /workdir. So
-    this part of the command says to use */home/myuser/workdir* as */workdir*
-    inside the container.
 
-  * **_-p 127.0.0.1:18000:8000_**:   
-    * *127.0.0.1* is the ip address you will use to connect to toaster. This
-      can be changed.
-    * *18000* is the port you will use to connect to toaster. This
-      can be changed.
-    * *8000*: is the port that is being mapped to 18000 on your local
-    machine. **Do not change this value or you will not be able to access
-    the webserver**.
-
-* Accessing the Toaster webpage
+* **Accessing the Toaster webpage**
 
   At this point you should be able to access toaster by opening the following
   url in your web browser:
-  ```
-  http://localhost:18000
-  ```
+  * **Linux/Mac**
 
-Building the container image
-----------------------------
-If for some reason you want to build your own image rather than using the one
-on dockerhub, then run the command below in the directory containing the
-Dockerfile:
-
-```
-docker build -t crops/toaster .
-```
-
-The argument to `-t` can be whatever you choose.
+    ```
+    http://localhost:18000
+    ```
+  * **Windows**
+  
+    On *Windows* you would find the ip address to use by running ```docker-machine ip``` in the quickstart terminal. For example if that address were *192.168.99.100* you would access toaster using:
+    
+     ```
+     http://192.168.99.100:18000
+     ```
