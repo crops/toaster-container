@@ -3,6 +3,8 @@ Toaster Container
 This repo is to create an image that is able to setup and use Toaster from
 the Yocto Project.
 
+The instructions will be slightly different depending on whether Linux, Windows or Mac is used. There are setup instructions for using **Windows/Mac** at https://github.com/crops/docker-win-mac-docs/wiki. When referring to **Windows/Mac** in the rest of the document, it is assumed the instructions at https://github.com/crops/docker-win-mac-docs/wiki were followed.
+
 Running the container
 ---------------------
 * **Create the workdir**
@@ -25,7 +27,7 @@ Running the container
     
   * **Windows/Mac**
 
-    If you followed the instructions for Windows or Mac at https://github.com/crops/docker-win-mac-docs/wiki, then a workdir isn't needed. Instead the volume created called *myvolume* will be used.
+    On Windows or Mac a workdir isn't needed. Instead the volume called *myvolume* will be used.
 
 * **Starting Toaster**
   * **Linux**
