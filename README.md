@@ -14,7 +14,7 @@ Running the container
     both configuration *and* output. For example a user could create a directory using the command
   
     ```
-    mkdir -p /home/myuser/workdir
+    mkdir -p /home/myuser/toasterstuff
     ```
 
     *It is important that you are the owner of the directory.* The owner of the
@@ -23,7 +23,7 @@ Running the container
     container creates.
 
     For the rest of the Linux instructions we'll assume the workdir chosen was
-    `/home/myuser/workdir`.
+    `/home/myuser/toasterstuff`.
     
   * **Windows/Mac**
 
@@ -36,7 +36,7 @@ Running the container
     to run a container for the first time would be:
 
     ```
-    docker run -it --rm -p 127.0.0.1:18000:8000 -v /home/myuser/workdir:/workdir crops/toaster
+    docker run -it --rm -p 127.0.0.1:18000:8000 -v /home/myuser/toasterstuff:/workdir crops/toaster
     ```
   * **Mac**
 
