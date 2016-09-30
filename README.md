@@ -27,7 +27,7 @@ Running the container
     
   * **Windows/Mac**
 
-    On Windows or Mac a workdir isn't needed. Instead the volume called *myvolume* will be used.
+    On Windows or Mac a workdir isn't needed. Instead the volume called *myvolume* will be used. This volume should have been created when following the instructions at https://github.com/crops/docker-win-mac-docs/wiki.
 
 * **Starting Toaster**
   * **Linux**
