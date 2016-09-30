@@ -7,7 +7,7 @@ The instructions will be slightly different depending on whether Linux, Windows 
 
 Running the container
 ---------------------
-* **Create the workdir**
+* **Create workdir or volume**
   * **Linux**
 
     The workdir you create will be used for all output from toaster. This means
