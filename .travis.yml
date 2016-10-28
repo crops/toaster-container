@@ -10,7 +10,7 @@ env:
   matrix:
     # BRANCH is the actual branch/tag in the github repo
     # DOCKERHUB_TAGS are the tags to use for the REPO when pushing to dockerhub
-    # POKYBRANCH is the branch of poky used during testing.
+    # POKYBRANCH is the branch of poky selected by toaster to use during tests.
     - REPO=crops/toaster-morty BRANCH=morty DOCKERHUB_TAG="latest" POKYBRANCH=morty
     - REPO=crops/toaster-krogoth BRANCH=krogoth DOCKERHUB_TAG="latest" POKYBRANCH=krogoth
     - REPO=crops/toaster-krogoth BRANCH=yocto-2.1 DOCKERHUB_TAG="2.1" POKYBRANCH=krogoth
