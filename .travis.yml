@@ -14,6 +14,7 @@ env:
     - REPO=crops/toaster-morty BRANCH=morty DOCKERHUB_TAG="latest" POKYBRANCH=morty
     - REPO=crops/toaster-krogoth BRANCH=krogoth DOCKERHUB_TAG="latest" POKYBRANCH=krogoth
     - REPO=crops/toaster-krogoth BRANCH=yocto-2.1 DOCKERHUB_TAG="2.1" POKYBRANCH=krogoth
+    - REPO=crops/toaster-krogoth BRANCH=yocto-2.1.1 DOCKERHUB_TAG="2.1.1" POKYBRANCH=krogoth
     - REPO=crops/toaster-master BRANCH=master DOCKERHUB_TAG="latest" POKYBRANCH=master
     - REPO=crops/toaster-master GITREPO=git://git.yoctoproject.org/poky-contrib BRANCH=toaster-next DOCKERHUB_TAG=toaster-next POKYBRANCH=master
 
