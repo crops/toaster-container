@@ -56,6 +56,16 @@ set -e
 
 function stop_containers () {
     docker kill $toastername $seleniumname >& /dev/null
+
+    # Since it appears that sometimes docker will not delete the container
+    # even though --rm=true is on the "docker run" command line, also manually
+    # delete the container.
+    if docker ps -a | grep -q $toastername; then
+        docker rm $toastername >& /dev/null
+    fi
+    if docker ps -a | grep -q $seleniumname; then
+        docker rm $seleniumname >& /dev/null
+    fi
 }
 
 trap fail SIGINT SIGTERM ERR
