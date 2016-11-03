@@ -50,7 +50,11 @@ RUN apt-get -y update && \
 ARG BRANCH
 ARG GITREPO
 RUN git clone $GITREPO --depth=1 --branch=$BRANCH /home/usersetup/poky && \
-    pipinstall.sh /home/usersetup/poky/bitbake
+
+######### START OF WORKAROUND. DELETE WHEN FIXED IN TOASTER ##########
+    pipinstall.sh /home/usersetup/poky/bitbake && \
+    pip uninstall -y django && pip install django==1.8.15
+######### END OF WORKAROUND ##########
 
 USER usersetup
 ENV LANG=en_US.UTF-8
