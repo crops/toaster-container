@@ -142,7 +142,7 @@ function start_selenium() {
 
     printf "\n\nStarting selenium...\n"
     if [ "$VNCPORT" != "" ]; then
-        docker run --rm=true -p 127.0.0.1:$VNCPORT:5900 \
+        docker run --rm=true -p $VNCPORT:5900 \
                    -p 127.0.0.1:4444:4444 --name=$seleniumname \
                    --link=$toastername \
                    selenium/standalone-firefox-debug:$selenium_version \
