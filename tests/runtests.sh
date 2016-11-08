@@ -34,10 +34,13 @@
 #    By default it is "master".
 #
 # VNCPORT
-#    When set, the selenium container will be ran with a vncserver listening
+#    When set, the selenium container will be run with a vncserver listening
 #    on this port. The password for the selenium vnc server is "secret". Note,
-#    you cannot of course connect to the vnc server until the selenium
-#    container has finished starting.
+#    you cannot, of course, connect to the vnc server until the selenium
+#    container has finished starting. If you would like to be able to access the
+#    vnc server from a different host, explicitly bind to 0.0.0.0:<portnum>
+#    e.g. VNCPORT=0.0.0.0:6900 and then you can connect to the server from a
+#    different host as "xtightvnc headless.mycomp.com:6900"
 #
 # SHOW_LOGS_ON_FAILURE
 #    When set, if the tests fail, the contents of toaster.log and selenium.log
@@ -142,7 +145,12 @@ function start_selenium() {
 
     printf "\n\nStarting selenium...\n"
     if [ "$VNCPORT" != "" ]; then
-        docker run --rm=true -p 127.0.0.1:$VNCPORT:5900 \
+	# default to loclahost visibility only, unless specified.
+	HOST_VNCBINDING="127.0.0.1:$VNCPORT"
+	if   echo $VNCPORT | grep -q ":"; then
+	    HOST_VNCBINDING="$VNCPORT"
+	fi
+        docker run --rm=true -p $HOST_VNCBINDING:5900 \
                    -p 127.0.0.1:4444:4444 --name=$seleniumname \
                    --link=$toastername \
                    selenium/standalone-firefox-debug:$selenium_version \
