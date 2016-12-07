@@ -24,7 +24,6 @@ env:
     #               match the new release
     # LATEST_RELEASE_REPO is the dockerhub repo that FLOATING_REPO should
     #                     match
-    - DOCKER_VERSION=1.12.0-0~trusty
     - FLOATING_REPO=crops/toaster
     - LATEST_RELEASE_REPO=crops/toaster-krogoth
     - GITREPO=git://git.yoctoproject.org/poky
@@ -33,9 +32,6 @@ env:
     - secure: "tAuiDavOZL2ud6cFvYPxWOLp8YMoxmGZok/lmcZFzRTqtUCKzvVzmwSkr0q/6ySar11weuvfj1FVKF3OZAf5wzDmWCo3ZxxQ6nR6rKDzZwSPheIanLRmKj/WICXwW/5lR0w0FL5/H/+CFZYthzxNUV2MSsxAUTMsDSXr44HowzOZHn9wiAB3gAi7KEkREQYhkEytMH++OYgs9ZMfu4aLMEhDbKe2jEZkVy+oQlKdvHCRb4rsHIxMZmFv9OzTjsgwZEdnnsdFnwb7AOt6jADEXoK731+MumXSAC3b26MN6uyXpgGmPrHAcGknymU0ueqtuVLJsyFApjpHO1ru/ZZfQpuYnTD00PX4SFn9P/Yq4Q9cYYNSwXf52X5vw9j36gjfrYzJgHrhMGCo+sXDvN03eabuTsL8HNQwEDgsZfbPg+61m3hqSJ1EKQ8GKg1kcfuLlQA2KZHKgtwnG3KDFUe1shgDD4cIkryWHKr4zdVNN0jkflBiGblWabFUjIWRgVq9Xi4alXNl8DHhWjtMoTRNGb102EcxYp1yZji87ljEwaxjDjbTFoNrHdmXAQdKg0MNSu4lO2D7M4UjyYwipf8/sna2HiCXH2wyYa6Y+/6POWcGVkP8GpLpLFXk1pRv/4OB5qSC89jZCbnfzkE7wfbboZd82GhyT+s31+KA6daurmc="
 
 before_install:
-  # upgrade docker-engine to specific version, mostly to make sure the
-  # build-arg argument exists
-  - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine=${DOCKER_VERSION}
   # For annotate-output
   - sudo apt-get install -y devscripts
 
