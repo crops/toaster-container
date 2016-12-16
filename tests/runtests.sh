@@ -127,7 +127,8 @@ function start_toaster() {
 
     while ! grep "$sentinel" $toasterlog >& /dev/null; do
         # Check if the job exited
-        if [ "$(ps -p $toasterpid -o comm=)" != "docker" ] ; then
+	comm="$(ps -p $toasterpid -o comm=)"
+        if [ ${comm} != "docker" -a ${comm} != "docker-current" ] ; then
             echo "ERROR: The toaster job couldn't be found."
             fail
         fi
@@ -165,7 +166,8 @@ function start_selenium() {
 
     while ! grep "$sentinel" $seleniumlog >& /dev/null; do
         # Check if the job exited
-        if [ "$(ps -p $seleniumpid -o comm=)" != "docker" ] ; then
+	comm=$(ps -p $seleniumpid -o comm=)
+        if [ ${comm} != "docker" -a ${comm} != "docker-current" ] ; then
             echo "ERROR: The selenium job couldn't be found."
             fail
         fi
