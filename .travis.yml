@@ -43,3 +43,12 @@ script:
 
 after_success:
   - bash deploy.sh
+
+
+notifications:
+  email:
+    recipients:
+      - brian.avery@intel.com
+      - david.reyna.windriver.com
+    on_success: change
+    on_failure: always
