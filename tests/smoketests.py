@@ -16,14 +16,50 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+from __future__ import print_function
 import argparse
 import os
+import signal
 import sys
+import threading
+import time
 import traceback
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+hb=None
+def handler(signum, frame):
+    if hb:
+        hb.stop()
+
+class HeartBeat():
+    def __init__(self):
+        self.runloop = False
+        self.t = None
+
+    def print_dots(self):
+        while self.runloop:
+            print(".", end="")
+            sys.stdout.flush()
+            time.sleep(1)
+        print("\n", end="")
+        sys.stdout.flush()
+
+    def start(self):
+        self.t = threading.Thread(target=self.print_dots)
+        self.runloop = True
+        self.t.start()
+
+    def stop(self):
+        if self.t:
+            self.runloop = False
+            self.t.join()
+            self.t = None
+
+signal.signal(signal.SIGINT, handler)
+signal.signal(signal.SIGTERM, handler)
 
 parser = argparse.ArgumentParser()
 
@@ -52,8 +88,12 @@ try:
     element.click()
 
     # Wait for the new project page to actually appear
+    hb = HeartBeat()
+    hb.start()
+
     ec = EC.presence_of_element_located((By.ID, "new-project-name"))
     WebDriverWait(driver, args.timeout).until(ec)
+    hb.stop()
 
     # Type the project name
     element = driver.find_element_by_id("new-project-name")
@@ -95,8 +135,12 @@ try:
                 "div.alert.build-result.alert-danger"
                 "div.alert.build-result.alert-error")
 
+    hb = HeartBeat()
+    hb.start()
+
     ec = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
     element = WebDriverWait(driver, args.timeout).until(ec)
+    hb.stop()
 
     # If the build failed bail out
     if ("alert-danger" or "alert-error") in element.get_attribute("class"):
@@ -104,6 +148,9 @@ try:
 
 except Exception as e:
     failed=True
+
+    if hb:
+        hb.stop()
 
     traceback.print_exc()
 
