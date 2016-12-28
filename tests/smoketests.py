@@ -40,10 +40,20 @@ class HeartBeat():
         self.t = None
 
     def print_dots(self):
+        total_dots = 0
+        dots_before_newline = 80
+
         while self.runloop:
             print(".", end="")
+            total_dots += 1
+
+            if total_dots == dots_before_newline:
+                print("\n", end="")
+                total_dots=0
+
             sys.stdout.flush()
             time.sleep(1)
+
         print("\n", end="")
         sys.stdout.flush()
 
