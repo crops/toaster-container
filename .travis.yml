@@ -49,6 +49,7 @@ notifications:
   email:
     recipients:
       - brian.avery@intel.com
-      - david.reyna.windriver.com
+      - david.reyna@windriver.com
+      - randy.e.witt@intel.com
     on_success: change
     on_failure: always
