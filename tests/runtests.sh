@@ -244,6 +244,9 @@ echo "smoketests PASSED!"
 ${SCRIPT_DIR}/checkartifacts.sh $tempdir/toasterbuild/build-toaster-2
 echo "checkartifacts PASSED!"
 
+${SCRIPT_DIR}/run-dumb-init-check.sh $toastername
+echo "run-dumb-init-check PASSED!"
+
 if [ "" == "$POKYDIR" ]; then
     # these tests only make sense if we are running the primed poky not a
     # local one

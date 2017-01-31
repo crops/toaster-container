@@ -66,4 +66,4 @@ USER usersetup
 ENV LANG=en_US.UTF-8
 RUN primetoaster.sh /home/usersetup /home/usersetup/poky
 
-ENTRYPOINT ["toaster-entry.py"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/bin/toaster-entry.py"]
