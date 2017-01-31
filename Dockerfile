@@ -52,6 +52,12 @@ ARG GITREPO
 RUN git clone $GITREPO --depth=1 --branch=$BRANCH /home/usersetup/poky && \
 
 ######### START OF WORKAROUND. DELETE WHEN FIXED IN TOASTER ##########
+######### Workaround needed for the following releases:     #########
+######### 2.1,2.1.1,2.1.2,2.2,2.2.1                         #########
+# This prevents Django 1.8.16's restrictive default on ALLOWED_HOSTS#
+# to break Toaster.  Releases other than those above override the   #
+# ALLOWED_HOSTS to keep the older default behavior. See             #
+# bitbake/lib/toaster/toastermain/settings.py for more information  #
     pipinstall.sh /home/usersetup/poky/bitbake && \
     pip uninstall -y django && pip install django==1.8.15
 ######### END OF WORKAROUND ##########
