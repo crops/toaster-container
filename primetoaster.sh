@@ -33,6 +33,14 @@ cd $WORKDIR
 . $POKYDIR/bitbake/bin/toaster start
 
 . $POKYDIR/bitbake/bin/toaster stop
-
-mv toaster.sqlite $WORKDIR || exit 1
+T_DB_FILE="toaster.sqlite"
+T_DB=`find $HOME -iname $T_DB_FILE`
+if [ $(dirname $T_DB) != $(readlink -f  $WORKDIR) ]; then
+    echo "Moving $T_DB/$T_DB_FILE to $WORKDIR"
+    mv ${T_DB} $WORKDIR || exit 1
+fi
+if [ ! -f $WORKDIR/$T_DB_FILE ]; then
+    echo "$WORKDIR/$T_DB_FILE not found, erroring"
+    exit 1
+fi
 rm $WORKDIR/build -rf || exit 1

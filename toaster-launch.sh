@@ -20,7 +20,12 @@ uselocal="${2}"
 # so that it doesn't have to be created again
 bootstrap="/home/usersetup"
 builddir="${workdir}/build"
-toasterdb="${builddir}/toaster.sqlite"
+# toaster moved the toaster.sqlite db from $builddir to $toaster_dir after morty
+if grep TOASTER_DIR $bootstrap/poky/bitbake/bin/toaster | grep -q pwd; then
+    toasterdb="${builddir}/toaster.sqlite"
+else
+    toasterdb="${workdir}/toaster.sqlite"
+fi
 
 if  [ "${uselocal}" = "LOCAL" ]; then
     if [ ! -e ${workdir}/poky ]; then
