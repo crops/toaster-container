@@ -23,15 +23,17 @@ container="$1"
 
 username="usersetup"
 username_width=${#username}
-expected="1 $username /usr/bin/dumb-init -- /usr/bin/toaster-entry.py"
+required="^1 $username /usr/bin/dumb-init"
 
 # Use bash -c, because otherwise you must specify an absolute path to ps,
 # because $PATH would not be set.
 actual=`docker exec $container bash -c "ps -w -w h -C dumb-init -o pid:1,user:$username_width,args"`
-
-if [ "$expected" != "$actual" ]; then
-    printf "expected dumb-init not found\n"
-    printf "expected:\n%s\n" "$expected"
+# just make sure that dumbinit is running as pid 1.
+# Limiting the check to this makes the test insensitive to
+# flags/options like --local
+if [ "$actual" =~ "$required" ]; then
+    printf "required dumb-init not found\n"
+    printf "required:\n%s\n" "$required"
     printf "actual:\n%s\n" "$actual"
     printf "all:\n"
     docker exec $container bash -c "ps -w -w -A -o pid,user:$username_width,args"
