@@ -13,7 +13,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-FROM crops/yocto:ubuntu-14.04-base
+FROM crops/yocto:ubuntu-16.04-base
 
 USER root
 
@@ -32,7 +32,7 @@ COPY sudoers.usersetup /etc/
 # The usersetup user is solely for adding a new user that has the same uid,
 # as the workspace. 70 is an arbitrary *low* unused uid on debian.
 RUN apt-get -y update && \
-    apt-get -y install python-pip python3-pip sudo sqlite && \
+    apt-get -y install python-pip python3-pip sudo sqlite tzdata && \
     apt-get clean && \
     userdel -r yoctouser && \
     groupadd -g 70 usersetup && \
