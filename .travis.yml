@@ -17,7 +17,6 @@ env:
     - REPO=crops/toaster-krogoth BRANCH=yocto-2.1.1 DOCKERHUB_TAG="2.1.1" POKYBRANCH=krogoth
     - REPO=crops/toaster-krogoth BRANCH=yocto-2.1.2 DOCKERHUB_TAG="2.1.2" POKYBRANCH=krogoth
     - REPO=crops/toaster-master BRANCH=master DOCKERHUB_TAG="latest" POKYBRANCH=master
-    - REPO=crops/toaster-master GITREPO=git://git.yoctoproject.org/poky-contrib BRANCH=toaster-next DOCKERHUB_TAG=toaster-next POKYBRANCH=master
 
   global:
     # FLOATING_REPO is the dockerhub repo the can change what it's tracking
