@@ -29,7 +29,7 @@ BITBAKEDIR=$1
 
 if grep '#!/usr/bin/env python3' $BITBAKEDIR/bin/bitbake >& /dev/null; then
     pip3 install --upgrade pip && \
-    pip3 install -r $BITBAKEDIR/toaster-requirements.txt
+    /usr/local/bin/pip3 install -r $BITBAKEDIR/toaster-requirements.txt
 else
     pip install --upgrade pip && \
     pip install -r $BITBAKEDIR/toaster-requirements.txt
