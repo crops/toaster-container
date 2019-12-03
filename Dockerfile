@@ -13,7 +13,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-FROM crops/yocto:ubuntu-16.04-base
+FROM crops/yocto:ubuntu-18.04-base
 
 USER root
 
@@ -28,11 +28,18 @@ COPY primetoaster.sh \
         /usr/bin/
 COPY sudoers.usersetup /etc/
 
+# https://serverfault.com/questions/949991/how-to-install-tzdata-on-a-ubuntu-docker-image
+# For ubuntu, do not use dash.
+RUN which dash &> /dev/null && (\
+    echo "dash dash/sh boolean false" | debconf-set-selections && \
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash) || \
+    echo "Skipping dash reconfigure (not applicable)"
+
 # We remove the user because we add a new one of our own.
 # The usersetup user is solely for adding a new user that has the same uid,
 # as the workspace. 70 is an arbitrary *low* unused uid on debian.
-RUN apt-get -y update && \
-    apt-get -y install python-pip python3-pip sudo sqlite tzdata && \
+RUN export DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
+    apt-get -y install python3-pip sudo sqlite tzdata && \
     apt-get clean && \
     userdel -r yoctouser && \
     groupadd -g 70 usersetup && \
@@ -50,17 +57,7 @@ RUN apt-get -y update && \
 ARG BRANCH
 ARG GITREPO
 RUN git clone $GITREPO --depth=1 --branch=$BRANCH /home/usersetup/poky && \
-
-######### START OF WORKAROUND. DELETE WHEN FIXED IN TOASTER ##########
-######### Workaround needed for the following releases:     #########
-######### 2.1,2.1.1,2.1.2,2.2,2.2.1                         #########
-# This prevents Django 1.8.16's restrictive default on ALLOWED_HOSTS#
-# to break Toaster.  Releases other than those above override the   #
-# ALLOWED_HOSTS to keep the older default behavior. See             #
-# bitbake/lib/toaster/toastermain/settings.py for more information  #
-    pipinstall.sh /home/usersetup/poky/bitbake && \
-    pip uninstall -y django && pip install django==1.8.15
-######### END OF WORKAROUND ##########
+    pipinstall.sh /home/usersetup/poky/bitbake
 
 USER usersetup
 ENV LANG=en_US.UTF-8
