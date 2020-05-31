@@ -2,7 +2,7 @@
 
 # runtests.sh
 #
-# Copyright (C) 2016 Intel Corporation
+# Copyright (C) 2016-2020 Intel Corporation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -21,7 +21,7 @@
 # SELENIUM_VERSION
 #    This is the version of selenium that will be used for the selenium
 #    container and the selenium modules installed in the virtualenv. The
-#    default is 2.53.0.
+#    default is 3.141.0.
 #
 # IMAGE
 #    This is the image to be used for toaster. It should be in the same format
@@ -30,7 +30,7 @@
 #
 # POKYBRANCH
 #    If set, this is the branch of poky that will be used by toaster when doing
-#    a build. i.e. "jethro", "krogoth", "master"
+#    a build. i.e. "zeus", "dunfell", "master"
 #    By default it is "master".
 #
 # VNCPORT
@@ -190,7 +190,7 @@ fi
 if [ "" != "$SELENIUM_VERSION" ]; then
     selenium_version="$SELENIUM_VERSION"
 else
-    selenium_version=2.53.0
+    selenium_version=3.141.0
 fi
 
 if [ "" != "$POKYBRANCH" ]; then
