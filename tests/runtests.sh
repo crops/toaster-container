@@ -236,7 +236,7 @@ fi
 SCRIPT_DIR=$(dirname "$THIS_SCRIPT")
 SCRIPT_DIR=$(readlink -f "$SCRIPT_DIR")
 
-${SCRIPT_DIR}/smoketests.py --toaster_url="$toastername:8000" \
+${SCRIPT_DIR}/smoketests.py --toaster_url="http://$toastername:8000/" \
                 $timeout_arg \
                 $pokybranch_arg
 echo "smoketests PASSED!"

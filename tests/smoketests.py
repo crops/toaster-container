@@ -85,8 +85,9 @@ parser.add_argument("--timeout", type=int, default="120",
                     help="timeout in seconds to wait for page elements")
 
 args = parser.parse_args()
-driver = webdriver.Remote(args.server_url,
-                          webdriver.DesiredCapabilities.FIREFOX.copy())
+firefox_options = webdriver.FirefoxOptions()
+driver = webdriver.Remote(command_executor=args.server_url,
+                          options=firefox_options)
 
 driver.get(args.toaster_url)
 
