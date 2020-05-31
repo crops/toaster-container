@@ -1,3 +1,6 @@
+# Ubuntu 18.04
+dist: bionic
+
 # The language is set to python to ensure virtualenv and python exist for the
 # tests.
 language: python
@@ -23,7 +26,7 @@ env:
     # LATEST_RELEASE_REPO is the dockerhub repo that FLOATING_REPO should
     #                     match
     - FLOATING_REPO=crops/toaster
-    - LATEST_RELEASE_REPO=crops/toaster-morty
+    - LATEST_RELEASE_REPO=crops/toaster-dunfell
     - GITREPO=git://git.yoctoproject.org/poky
 
 before_install:
