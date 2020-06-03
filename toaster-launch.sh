@@ -53,16 +53,9 @@ fi
 # oe environment setup
 . ${bootstrap}/poky/oe-init-build-env ${builddir}
 
-# run toaster and drop to an interactive shell. On previous versions no
-# arguments webport only took a port. But on more recent versions
-# it also requires an address.
-# Ideally we would ask which was supported, but --help doesn't work on older
-# versions. So "cheat" and grep the toaster script for the usage pattern.
-# Also note if the server listens on localhost in the container, it evidently
+# Run toaster and drop to an interactive shell.
+# Note if the server listens on localhost in the container, it evidently
 # can't be reached even with iptables without "route_localnet" enabled.
-if grep -q "Usage:.*\[webport=<address" ${bootstrap}/poky/bitbake/bin/toaster; then
-    . ${bootstrap}/poky/bitbake/bin/toaster start webport="0.0.0.0:8000"
-else
-    . ${bootstrap}/poky/bitbake/bin/toaster start
-fi
+. ${bootstrap}/poky/bitbake/bin/toaster start webport="0.0.0.0:8000"
+
 bash -i
