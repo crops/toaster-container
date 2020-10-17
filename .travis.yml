@@ -43,6 +43,7 @@ notifications:
   email:
     recipients:
       - timothy.t.orling@intel.com
+      - ticotimo@gmail.com
       - david.reyna@windriver.com
       - randy.e.witt@intel.com
     on_success: change
