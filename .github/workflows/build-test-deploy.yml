@@ -15,23 +15,69 @@ on:
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: 
+        # BRANCH is the actual branch/tag in the github repo
+        # DOCKERHUB_TAGs are the tags to use for the REPO when pushing to dockerhub
+        # POKYBRANCH is the branch of poky selected by toaster to use during tests.
+        - repo: crops/toaster-zeus
+          branch: zeus
+          dockerhub_tag: latest
+          pokybranch: zeus
+        - repo: crops/toaster-dunfell
+          branch: dunfell
+          dockerhub_tag: latest
+          pokybranch: dunfell
+        - repo: crops/toaster-master
+          branch: master
+          dockerhub_tag: latest
+          pokybranch: master
     env:
-      REPO: crops/toaster-container
+      # FLOATING_REPO is the dockerhub repo the can change what it's tracking
+      #               currently it's morty, but on the next release it will
+      #               match the new release
+      # LATEST_RELEASE_REPO is the dockerhub repo that FLOATING_REPO should
+      #                     match
+      FLOATING_REPO: crops/toaster
+      LATEST_RELEASE_REPO: crops/toaster-kirkstone
+      REPO: ${{ matrix.repo }}
+      BRANCH: ${{ matrix.branch }}
+      DOCKERHUB_TAG: ${{ matrix.dockerhub_tag }}
+      POKYBRANCH: ${{ matrix.pokybranch }}
+      GITREPO: git://git.yoctoproject.org/poky
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Run Python commands
+        run: |
+          pip install --upgrade pip virtualenv
+          python3.8 -m venv env
+          source env/bin/activate
+          echo "VIRTUAL ENV:" $VIRTUAL_ENV
+
+      # For annotate-output
+      - name: pre-install
+        run: sudo apt-get install -y devscripts
+
       # Build the image
       - name: build
-        run: docker build -t ${REPO} .
+        run: |
+          annotate-output docker build --build-arg GITREPO="${GITREPO}" --build-arg BRANCH="${BRANCH}" -t ${REPO} .
 
       # Test the image
       - name: test
         run: |
-          pip install pytest
-          pytest --testimage=$REPO
+          annotate-output bash -c "cd tests; SELENIUM_TIMEOUT=1800 IMAGE=local SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
 
       # Deploy the images
       - name: deploy
