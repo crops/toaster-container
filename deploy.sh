@@ -16,40 +16,13 @@
 #
 # This script is meant to be consumed by travis. It's very simple but running
 # a loop in travis.yml isn't a great thing.
-set -x
 set -e
-
-function getrev {
-    docker run -it --rm=true --entrypoint=git -w /home/usersetup/poky \
-        local:latest --no-pager log --pretty=%h -1 | tr -d '\r'
-}
 
 # Don't deploy on pull requests because it could just be junk code that won't
 # get merged
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-    REPOS="${REPO}"
-
-    # If this is the LATEST_RELEASE_REPO we also need to push to the
-    # FLOATING_REPO
-    if [ "${LATEST_RELEASE_REPO}" = "${REPO}" ]; then
-        REPOS="${REPOS} ${FLOATING_REPO}"
-    fi
-
-    docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-    for repo in $REPOS; do
-        docker tag local $repo:${DOCKERHUB_TAG}
-
-        # Also add a timestamp tag with the committish so that we know when it
-        # was built and what it contains
-        docker tag local $repo:${DOCKERHUB_TAG}-$(date -u +%Y%m%d%H%M)-$(getrev)
-
-        docker push $repo
-    done
-
-    # Show the images so we know what should have been pushed
-    docker images
-
+if ([ "${GITHUB_EVENT_NAME}" = "push" ] || [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ] || [ "${GITHUB_EVENT_NAME}" = "schedule" ]) && [ "${GITHUB_REF}" = "refs/heads/master" ]; then
+    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    docker push ${REPO}:latest
 else
     echo "Not pushing since build was triggered by a pull request."
 fi
