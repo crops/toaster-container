@@ -22,14 +22,18 @@ jobs:
         # BRANCH is the actual branch/tag in the github repo
         # DOCKERHUB_TAGs are the tags to use for the REPO when pushing to dockerhub
         # POKYBRANCH is the branch of poky selected by toaster to use during tests.
-        - repo: crops/toaster-zeus
-          branch: zeus
-          dockerhub_tag: latest
-          pokybranch: zeus
         - repo: crops/toaster-dunfell
           branch: dunfell
           dockerhub_tag: latest
           pokybranch: dunfell
+        - repo: crops/toaster-hardknott
+          branch: hardknott
+          dockerhub_tag: latest
+          pokybranch: hardknott
+        - repo: crops/toaster-honister
+          branch: honister
+          dockerhub_tag: latest
+          pokybranch: honister
         - repo: crops/toaster-master
           branch: master
           dockerhub_tag: latest
@@ -41,7 +45,7 @@ jobs:
       # LATEST_RELEASE_REPO is the dockerhub repo that FLOATING_REPO should
       #                     match
       FLOATING_REPO: crops/toaster
-      LATEST_RELEASE_REPO: crops/toaster-kirkstone
+      LATEST_RELEASE_REPO: crops/toaster-honister
       REPO: ${{ matrix.repo }}
       BRANCH: ${{ matrix.branch }}
       DOCKERHUB_TAG: ${{ matrix.dockerhub_tag }}
@@ -77,7 +81,7 @@ jobs:
       # Test the image
       - name: test
         run: |
-          annotate-output bash -c "cd tests; SELENIUM_TIMEOUT=1800 IMAGE=local SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
+          annotate-output bash -c "cd tests; SELENIUM_TIMEOUT=1800 IMAGE=${REPO}:${DOCKERHUB_TAG}  SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
 
       # Deploy the images
       - name: deploy
