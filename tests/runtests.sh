@@ -3,19 +3,10 @@
 # runtests.sh
 #
 # Copyright (C) 2016-2020 Intel Corporation
+# Copyright (C) 2022 Konsulko Group
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 2 as
-# published by the Free Software Foundation.
+# SPDX-License-Identifier: GPL-2.0-only
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # Variables you might care about:
 # SELENIUM_VERSION
@@ -30,7 +21,7 @@
 #
 # POKYBRANCH
 #    If set, this is the branch of poky that will be used by toaster when doing
-#    a build. i.e. "zeus", "dunfell", "master"
+#    a build. i.e. "dunfell", "hardknott, "honister", "master"
 #    By default it is "master".
 #
 # VNCPORT
@@ -69,42 +60,6 @@ function stop_containers () {
     if docker ps -a | grep -q $seleniumname; then
         docker rm $seleniumname >& /dev/null
     fi
-}
-
-trap fail SIGINT SIGTERM ERR
-function fail () {
-    set +e
-
-    kill $(jobs -p)
-    stop_containers
-
-    echo "FAILURE: See logs in $tempdir"
-    if [ "" != "$SHOW_LOGS_ON_FAILURE" ]; then
-         printf "******************toaster.log*******************\n\n"
-         if [ "" != "$toasterlog" ]; then
-             cat $toasterlog
-         fi
-         printf "******************toaster.log*******************\n\n"
-
-         printf "******************toaster_ui.log*******************\n"
-         if [ "" != "$toaster_ui_log" ]; then
-             cat $toaster_ui_log
-         fi
-         printf "******************toaster_ui.log*******************\n\n"
-
-         printf "******************selenium.log******************\n"
-         if [ "" != "$seleniumlog" ]; then
-             cat $seleniumlog
-         fi
-         printf "******************selenium.log******************\n\n"
-
-         printf "******************screenshot.hex******************\n"
-         printf "*************Run 'xxd -r' to reverse**************\n"
-         xxd screenshot.png
-         printf "******************screenshot.hex******************\n\n"
-    fi
-
-    exit 1
 }
 
 function start_toaster() {
@@ -151,13 +106,13 @@ function start_selenium() {
         if   echo $VNCPORT | grep -q ":"; then
             HOST_VNCBINDING="$VNCPORT"
         fi
-        docker run --rm=true -p $HOST_VNCBINDING:5900 \
+        docker run -t --rm -p $HOST_VNCBINDING:5900 \
                    -p 127.0.0.1:4444:4444 --name=$seleniumname \
                    --link=$toastername \
                    selenium/standalone-firefox-debug:$selenium_version \
                    >> $seleniumlog 2>&1 &
     else
-        docker run --rm=true -p 127.0.0.1:4444:4444 --name=$seleniumname \
+        docker run -t --rm -p 127.0.0.1:4444:4444 --name=$seleniumname \
                    --link=$toastername \
                    selenium/standalone-firefox:$selenium_version \
                    >> $seleniumlog 2>&1 &
@@ -247,7 +202,7 @@ echo "checkartifacts PASSED!"
 ${SCRIPT_DIR}/run-dumb-init-check.sh $toastername
 echo "run-dumb-init-check PASSED!"
 
-if [ "" == "$POKYDIR" ]; then
+if [[ "" == "$POKYDIR" ]]; then
     # these tests only make sense if we are running the primed poky not a
     # local one
     grep -q "No migrations to apply" $toasterlog
@@ -258,7 +213,52 @@ if [ "" == "$POKYDIR" ]; then
     fi
     echo "layerindex priming PASSED"
 fi
-echo "ALL TESTS PASSED!"
+echo "ALL TESTS PASSED!"; exit 0
 
+function fail () {
+set +ex
+
+kill $(jobs -p)
 stop_containers
-rm $tempdir -rf
+
+echo "FAILURE: See logs in $tempdir"
+if [ "" != "$SHOW_LOGS_ON_FAILURE" ]; then
+     printf "******************toaster.log*******************\n\n"
+     if [ "" != "$toasterlog" ]; then
+	 cat $toasterlog
+     fi
+     printf "******************toaster.log*******************\n\n"
+
+     printf "******************toaster_ui.log*******************\n"
+     if [ "" != "$toaster_ui_log" ]; then
+	 cat $toaster_ui_log
+     fi
+     printf "******************toaster_ui.log*******************\n\n"
+
+     printf "******************selenium.log******************\n"
+     if [ "" != "$seleniumlog" ]; then
+	 cat $seleniumlog
+     fi
+     printf "******************selenium.log******************\n\n"
+
+     printf "******************screenshot.hex******************\n"
+     printf "*************Run 'xxd -r' to reverse**************\n"
+     xxd screenshot.png
+     printf "******************screenshot.hex******************\n\n"
+fi
+
+exit 1
+}
+trap fail SIGINT SIGTERM ERR
+
+function cleanup()
+{
+printf "\n\nStopping containers...\n"
+stop_containers
+
+printf "\n\nRemoving temporary directory...\n"
+time rm -rf $tempdir
+
+echo $(ps -a)
+}
+trap cleanup EXIT
