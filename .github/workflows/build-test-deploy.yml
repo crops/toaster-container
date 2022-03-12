@@ -81,7 +81,7 @@ jobs:
       # Test the image
       - name: test
         run: |
-          annotate-output bash -c "cd tests; SELENIUM_TIMEOUT=1800 IMAGE=${REPO}:${DOCKERHUB_TAG}  SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
+          annotate-output bash -c "cd tests; SELENIUM_TIMEOUT=600 IMAGE=${REPO}:${DOCKERHUB_TAG}  SHOW_LOGS_ON_FAILURE=1 ./runtests.sh"
 
       # Deploy the images
       - name: deploy
