@@ -22,11 +22,11 @@ if ([ "${GITHUB_EVENT_NAME}" = "push" ] || [ "${GITHUB_EVENT_NAME}" = "workflow_
     echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
     for repo in $REPOS; do
-        docker tag local $repo:${DOCKERHUB_TAG}
+        docker tag ${REPO} $repo:${DOCKERHUB_TAG}
 
         # Also add a timestamp tag with the committish so that we know when it
         # was built and what it contains
-        docker tag local $repo:${DOCKERHUB_TAG}-$(date -u +%Y%m%d%H%M)-$(getrev)
+        docker tag ${REPO} $repo:${DOCKERHUB_TAG}-$(date -u +%Y%m%d%H%M)-$(getrev)
 
         docker push $repo
     done
