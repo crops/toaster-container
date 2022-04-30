@@ -7,6 +7,11 @@
 # This script is meant to be consumed by GitHub Actions.
 set -e
 
+function getrev {
+    docker run -it --rm=true --entrypoint=git -w /home/usersetup/poky \
+        local:latest --no-pager log --pretty=%h -1 | tr -d '\r'
+}
+
 # Don't deploy on pull requests because it could just be junk code that won't
 # get merged
 if ([ "${GITHUB_EVENT_NAME}" = "push" ] || [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ] || [ "${GITHUB_EVENT_NAME}" = "schedule" ]) && [ "${GITHUB_REF}" = "refs/heads/master" ]; then
