@@ -43,13 +43,13 @@ jobs:
           dockerhub_tag: latest
           pokybranch: master
     env:
-      # FLOATING_REPO is the dockerhub repo the can change what it's tracking
-      #               currently it's morty, but on the next release it will
+      # FLOATING_REPO is the dockerhub repo that can change what it's tracking
+      #               currently it's kirkstone, but on the next release it will
       #               match the new release
       # LATEST_RELEASE_REPO is the dockerhub repo that FLOATING_REPO should
       #                     match
       FLOATING_REPO: crops/toaster
-      LATEST_RELEASE_REPO: crops/toaster-honister
+      LATEST_RELEASE_REPO: crops/toaster-kirkstone
       REPO: ${{ matrix.repo }}
       BRANCH: ${{ matrix.branch }}
       DOCKERHUB_TAG: ${{ matrix.dockerhub_tag }}
