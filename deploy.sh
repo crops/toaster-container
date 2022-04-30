@@ -9,7 +9,7 @@ set -e
 
 function getrev {
     docker run -it --rm=true --entrypoint=git -w /home/usersetup/poky \
-        local:latest --no-pager log --pretty=%h -1 | tr -d '\r'
+        ${REPO}:latest --no-pager log --pretty=%h -1 | tr -d '\r'
 }
 
 # Don't deploy on pull requests because it could just be junk code that won't

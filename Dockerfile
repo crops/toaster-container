@@ -53,14 +53,14 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
         /usr/bin/restrict_useradd.sh && \
     echo "#include /etc/sudoers.usersetup" >> /etc/sudoers
 
+USER usersetup
+ENV LANG=en_US.UTF-8
 # Install the toaster requirements.
 ARG BRANCH
 ARG GITREPO
 RUN git clone $GITREPO --depth=1 --branch=$BRANCH /home/usersetup/poky && \
     pipinstall.sh /home/usersetup/poky/bitbake
 
-USER usersetup
-ENV LANG=en_US.UTF-8
 RUN primetoaster.sh /home/usersetup /home/usersetup/poky
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "/usr/bin/toaster-entry.py"]
