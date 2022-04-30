@@ -34,6 +34,10 @@ jobs:
           branch: honister
           dockerhub_tag: latest
           pokybranch: honister
+        - repo: crops/toaster-kirkstone
+          branch: kirkstone
+          dockerhub_tag: latest
+          pokybranch: kirkstone
         - repo: crops/toaster-master
           branch: master
           dockerhub_tag: latest
