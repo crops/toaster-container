@@ -26,7 +26,7 @@ import time
 import traceback
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 hb=None
@@ -95,7 +95,7 @@ failed=False
 
 try:
     # Click the new project button
-    element = driver.find_element_by_id("new-project-button")
+    element = driver.find_element(By.ID, "new-project-button")
     element.click()
 
     # Wait for the new project page to actually appear
@@ -107,12 +107,12 @@ try:
     hb.stop()
 
     # Type the project name
-    element = driver.find_element_by_id("new-project-name")
+    element = driver.find_element(By.ID, "new-project-name")
     element.send_keys("foo")
 
     # Pick the poky branch that matches the branch specified
-    element = driver.find_element_by_id("projectversion")
-    options = element.find_elements_by_tag_name("option")
+    element = driver.find_element(By.ID, "projectversion")
+    options = element.find_elements(By.TAG_NAME, "option")
     optionfound = False
     for option in options:
         if args.pokybranch in option.text.lower():
@@ -127,15 +127,15 @@ try:
         raise Exception(msg)
 
     # Actually click the button to create the project
-    element = driver.find_element_by_id("create-project-button")
+    element = driver.find_element(By.ID, "create-project-button")
     element.click()
 
     # Type in the target to build
-    element = driver.find_element_by_id("build-input")
+    element = driver.find_element(By.ID, "build-input")
     element.send_keys(args.target)
 
     # Click the button to start the build
-    element = driver.find_element_by_id("build-button")
+    element = driver.find_element(By.ID, "build-button")
     element.click()
 
 
@@ -143,7 +143,7 @@ try:
     # note: bootstrap2 (krogoth) calls it alert-error
     #       bootstrap3 (2.2 forwards) calls it alert-danger
     selector = ("div.alert.build-result.alert-success,"
-                "div.alert.build-result.alert-danger"
+                "div.alert.build-result.alert-danger,"
                 "div.alert.build-result.alert-error")
 
     hb = HeartBeat()
@@ -151,11 +151,11 @@ try:
 
     ec = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
     element = WebDriverWait(driver, args.timeout).until(ec)
-    hb.stop()
 
     # If the build failed bail out
     if ("alert-danger" or "alert-error") in element.get_attribute("class"):
         raise Exception("ERROR: Build of {} failed.".format(args.target))
+    hb.stop()
 
 except Exception as e:
     failed=True
