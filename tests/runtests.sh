@@ -7,7 +7,6 @@
 #
 # SPDX-License-Identifier: GPL-2.0-only
 #
-
 # Variables you might care about:
 # SELENIUM_VERSION
 #    This is the version of selenium that will be used for the selenium
@@ -23,6 +22,14 @@
 #    If set, this is the branch of poky that will be used by toaster when doing
 #    a build. i.e. "dunfell", "hardknott, "honister", "master"
 #    By default it is "master".
+#
+# TOASTER_IP
+#    When set, the toaster container will be launch with this ip addr, e.g
+#    TOASTER_IP=0.0.0.0
+#
+# TOASTER_PORT
+#    When set, the toaster container will be launch with this port, e.g
+#    TOASTER_PORT=18000:8000
 #
 # VNCPORT
 #    When set, the selenium container will be run with a vncserver listening
@@ -76,6 +83,7 @@ function start_toaster() {
     printf "\n\nStarting toaster...\n"
     docker run -t --rm=true --name=$toastername \
                -v $tempdir/toasterbuild:/workdir \
+               -p ${toaster_ip}:${toaster_port} \
                ${poky_bind} \
                ${image} ${local_arg} >> $toasterlog 2>&1 &
     toasterpid=$!
@@ -93,7 +101,7 @@ function start_toaster() {
 
 function start_selenium() {
     touch $seleniumlog
-    sentinel="Selenium Server is up and running"
+    sentinel="Started Selenium Standalone"
     # This convoluted command will output the logfile until the sentinel is
     # found.
     bash -c "tail -n +0 -f $seleniumlog | \
@@ -145,7 +153,19 @@ fi
 if [ "" != "$SELENIUM_VERSION" ]; then
     selenium_version="$SELENIUM_VERSION"
 else
-    selenium_version=3.141.0
+    selenium_version=4.6.0
+fi
+
+if [ "" != "$TOASTER_IP" ]; then
+    toaster_ip="$TOASTER_IP"
+else
+    toaster_ip=0.0.0.0
+fi
+
+if [ "" != "$TOASTER_PORT" ]; then
+    toaster_port="$TOASTER_PORT"
+else
+    toaster_port=18000:8000
 fi
 
 if [ "" != "$POKYBRANCH" ]; then
