@@ -50,6 +50,11 @@ if [ ! -e "${toasterdb}" ] && [ "${uselocal}" != "LOCAL" ] ; then
                           set sourcedir='${workdir}',builddir='${builddir}'"
 fi
 
+# activate python3 virtual environment
+VIRTUAL_ENV=/opt/venv
+PATH="$VIRTUAL_ENV/bin:$PATH"
+${VIRTUAL_ENV}/bin/activate
+
 # oe environment setup
 . ${bootstrap}/poky/oe-init-build-env ${builddir}
 
