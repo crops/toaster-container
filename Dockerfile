@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0-only
 
-FROM crops/yocto:ubuntu-18.04-base
+FROM crops/yocto:ubuntu-20.04-base
 
 USER root
 
