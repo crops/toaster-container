@@ -26,10 +26,10 @@ jobs:
           branch: dunfell
           dockerhub_tag: latest
           pokybranch: dunfell
-	- repo: crops/toaster-kirkstone
-	  branch: kirkstone
-	  dockerhub_tag: latest
-	  pokybranch: kirkstone
+        - repo: crops/toaster-kirkstone
+          branch: kirkstone
+          dockerhub_tag: latest
+          pokybranch: kirkstone
         - repo: crops/toaster-langdale
           branch: langdale
           dockerhub_tag: latest
