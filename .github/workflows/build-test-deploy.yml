@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: 
+        include:
         # BRANCH is the actual branch/tag in the github repo
         # DOCKERHUB_TAGs are the tags to use for the REPO when pushing to dockerhub
         # POKYBRANCH is the branch of poky selected by toaster to use during tests.
@@ -26,18 +26,14 @@ jobs:
           branch: dunfell
           dockerhub_tag: latest
           pokybranch: dunfell
-        - repo: crops/toaster-hardknott
-          branch: hardknott
+	- repo: crops/toaster-kirkstone
+	  branch: kirkstone
+	  dockerhub_tag: latest
+	  pokybranch: kirkstone
+        - repo: crops/toaster-langdale
+          branch: langdale
           dockerhub_tag: latest
-          pokybranch: hardknott
-        - repo: crops/toaster-honister
-          branch: honister
-          dockerhub_tag: latest
-          pokybranch: honister
-        - repo: crops/toaster-kirkstone
-          branch: kirkstone
-          dockerhub_tag: latest
-          pokybranch: kirkstone
+          pokybranch: langdale
         - repo: crops/toaster-master
           branch: master
           dockerhub_tag: latest
