@@ -30,10 +30,10 @@ jobs:
           branch: kirkstone
           dockerhub_tag: latest
           pokybranch: kirkstone
-        - repo: crops/toaster-langdale
-          branch: langdale
+        - repo: crops/toaster-mickledore
+          branch: mickledore
           dockerhub_tag: latest
-          pokybranch: langdale
+          pokybranch: mickledore
         - repo: crops/toaster-master
           branch: master
           dockerhub_tag: latest
