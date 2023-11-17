@@ -11,7 +11,7 @@
 # SELENIUM_VERSION
 #    This is the version of selenium that will be used for the selenium
 #    container and the selenium modules installed in the virtualenv. The
-#    default is 3.141.0.
+#    default is 4.15.0.
 #
 # IMAGE
 #    This is the image to be used for toaster. It should be in the same format
@@ -153,7 +153,7 @@ fi
 if [ "" != "$SELENIUM_VERSION" ]; then
     selenium_version="$SELENIUM_VERSION"
 else
-    selenium_version=4.6.0
+    selenium_version=4.15.0
 fi
 
 if [ "" != "$TOASTER_IP" ]; then
