@@ -34,6 +34,10 @@ jobs:
           branch: mickledore
           dockerhub_tag: latest
           pokybranch: mickledore
+        - repo: crops/toaster-nanbield
+          branch: nanbield
+          dockerhub_tag: latest
+          pokybranch: nanbield
         - repo: crops/toaster-master
           branch: master
           dockerhub_tag: latest
