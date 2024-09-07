@@ -22,18 +22,14 @@ jobs:
         # BRANCH is the actual branch/tag in the github repo
         # DOCKERHUB_TAGs are the tags to use for the REPO when pushing to dockerhub
         # POKYBRANCH is the branch of poky selected by toaster to use during tests.
-        - repo: crops/toaster-dunfell
-          branch: dunfell
-          dockerhub_tag: latest
-          pokybranch: dunfell
         - repo: crops/toaster-kirkstone
           branch: kirkstone
           dockerhub_tag: latest
           pokybranch: kirkstone
-        - repo: crops/toaster-mickledore
-          branch: mickledore
+        - repo: crops/toaster-scarthgap
+          branch: scarthgap
           dockerhub_tag: latest
-          pokybranch: mickledore
+          pokybranch: scarthgap
         - repo: crops/toaster-master
           branch: master
           dockerhub_tag: latest
